@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>BeatLab SE — Fixed Playhead & Safe Ranges</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">본문 바로가기</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="dot" aria-hidden="true"></div>
+      <h1>BeatLab <span>SE</span></h1>
+    </div>
+
+    <div class="transport">
+      <button id="play" class="btn primary" aria-pressed="false">▶ Play</button>
+      <button id="stop" class="btn">■ Stop</button>
+      <button id="clear" class="btn ghost">🗑 Clear</button>
+      <button id="randomize" class="btn ghost">🎲 Random</button>
+    </div>
+
+    <div class="tempo">
+      <label for="bpm">BPM</label>
+      <input id="bpm" type="range" min="60" max="200" value="120" />
+      <output id="bpmOut">120</output>
+    </div>
+
+    <div class="tempo">
+      <label for="swing">Swing</label>
+      <input id="swing" type="range" min="0" max="60" value="0" />
+      <output id="swingOut">0%</output>
+    </div>
+
+    <div class="tempo">
+      <label for="signature">Time</label>
+      <select id="signature" title="박자">
+        <option value="4/4" selected>4/4</option>
+        <option value="3/4">3/4</option>
+        <option value="5/4">5/4</option>
+        <option value="6/8">6/8</option>
+      </select>
+    </div>
+
+    <div class="tempo">
+      <label>Bars</label>
+      <div class="bars-ctrl">
+        <button id="barsDec" class="btn ghost" title="마디 줄이기">−</button>
+        <output id="barsOut">2</output>
+        <button id="barsInc" class="btn ghost" title="마디 늘리기">＋</button>
+      </div>
+    </div>
+
+    <div class="pattern">
+      <button id="save" class="btn ghost">💾 Save</button>
+      <button id="load" class="btn ghost">📂 Load</button>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="stack">
+      <!-- DRUMS (좌측 라벨 + 통합 V-Scroll) -->
+      <div class="ibox" id="box-drums">
+        <div class="ibox-head">
+          <div class="title">DRUMS</div>
+          <div class="ibox-controls">
+            <label>Vol
+              <input type="range" min="0" max="1" step="0.01" id="vol-drums" value="0.9">
+              <output id="volOut-drums">0.90</output>
+            </label>
+          </div>
+        </div>
+        <div class="pgrid melody">
+          <div class="scroller-v" id="vscroll-drums">
+            <div class="mgrid">
+              <div class="vlabels" id="keys-drums"></div>
+              <div class="hwrap" id="hscroll-drums">
+                <div class="rows notegrid" id="rows-drums"></div>
+                <div class="steps-labels" id="labels-drums" aria-hidden="true"></div>
+                <div class="barlines"></div>
+                <div class="playhead"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIANO -->
+      <div class="ibox" id="box-piano">
+        <div class="ibox-head">
+          <div class="title">PIANO</div>
+          <div class="ibox-controls">
+            <label>Vol
+              <input type="range" min="0" max="1" step="0.01" id="vol-piano" value="0.8">
+              <output id="volOut-piano">0.80</output>
+            </label>
+          </div>
+        </div>
+        <div class="pgrid melody">
+          <div class="scroller-v" id="vscroll-piano">
+            <div class="mgrid">
+              <div class="vlabels" id="keys-piano"></div>
+              <div class="hwrap" id="hscroll-piano">
+                <div class="rows notegrid" id="rows-piano"></div>
+                <div class="steps-labels" id="labels-piano" aria-hidden="true"></div>
+                <div class="barlines"></div>
+                <div class="playhead"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GUITAR -->
+      <div class="ibox" id="box-guitar">
+        <div class="ibox-head">
+          <div class="title">GUITAR</div>
+          <div class="ibox-controls">
+            <label>Vol
+              <input type="range" min="0" max="1" step="0.01" id="vol-guitar" value="0.78">
+              <output id="volOut-guitar">0.78</output>
+            </label>
+          </div>
+        </div>
+        <div class="pgrid melody">
+          <div class="scroller-v" id="vscroll-guitar">
+            <div class="mgrid">
+              <div class="vlabels" id="keys-guitar"></div>
+              <div class="hwrap" id="hscroll-guitar">
+                <div class="rows notegrid" id="rows-guitar"></div>
+                <div class="steps-labels" id="labels-guitar" aria-hidden="true"></div>
+                <div class="barlines"></div>
+                <div class="playhead"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BASS -->
+      <div class="ibox" id="box-bass">
+        <div class="ibox-head">
+          <div class="title">BASS</div>
+          <div class="ibox-controls">
+            <label>Vol
+              <input type="range" min="0" max="1" step="0.01" id="vol-bass" value="0.85">
+              <output id="volOut-bass">0.85</output>
+            </label>
+          </div>
+        </div>
+        <div class="pgrid melody">
+          <div class="scroller-v" id="vscroll-bass">
+            <div class="mgrid">
+              <div class="vlabels" id="keys-bass"></div>
+              <div class="hwrap" id="hscroll-bass">
+                <div class="rows notegrid" id="rows-bass"></div>
+                <div class="steps-labels" id="labels-bass" aria-hidden="true"></div>
+                <div class="barlines"></div>
+                <div class="playhead"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div>ⓒ 2025 BeatLab SE — Fixed Playhead & Safe Ranges</div>
+    <div class="hint">Space=Play/Pause · +/− Bars</div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
