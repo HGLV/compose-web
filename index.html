@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>BeatLab SE — Fixed Playhead & Safe Ranges</title>
+  <title>BeatLab SE — Final Version</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
 </head>
@@ -12,7 +12,7 @@
 
   <header class="topbar">
     <div class="brand">
-      <div class="dot" aria-hidden="true"></div>
+      <div class="dot"></div>
       <h1>BeatLab <span>SE</span></h1>
     </div>
 
@@ -37,7 +37,7 @@
 
     <div class="tempo">
       <label for="signature">Time</label>
-      <select id="signature" title="박자">
+      <select id="signature">
         <option value="4/4" selected>4/4</option>
         <option value="3/4">3/4</option>
         <option value="5/4">5/4</option>
@@ -48,9 +48,9 @@
     <div class="tempo">
       <label>Bars</label>
       <div class="bars-ctrl">
-        <button id="barsDec" class="btn ghost" title="마디 줄이기">−</button>
+        <button id="barsDec" class="btn ghost">−</button>
         <output id="barsOut">2</output>
-        <button id="barsInc" class="btn ghost" title="마디 늘리기">＋</button>
+        <button id="barsInc" class="btn ghost">＋</button>
       </div>
     </div>
 
@@ -62,7 +62,8 @@
 
   <main id="main" class="wrap">
     <section class="stack">
-      <!-- DRUMS (좌측 라벨 + 통합 V-Scroll) -->
+
+      <!-- DRUMS -->
       <div class="ibox" id="box-drums">
         <div class="ibox-head">
           <div class="title">DRUMS</div>
@@ -79,7 +80,7 @@
               <div class="vlabels" id="keys-drums"></div>
               <div class="hwrap" id="hscroll-drums">
                 <div class="rows notegrid" id="rows-drums"></div>
-                <div class="steps-labels" id="labels-drums" aria-hidden="true"></div>
+                <div class="steps-labels" id="labels-drums"></div>
                 <div class="barlines"></div>
                 <div class="playhead"></div>
               </div>
@@ -105,7 +106,7 @@
               <div class="vlabels" id="keys-piano"></div>
               <div class="hwrap" id="hscroll-piano">
                 <div class="rows notegrid" id="rows-piano"></div>
-                <div class="steps-labels" id="labels-piano" aria-hidden="true"></div>
+                <div class="steps-labels" id="labels-piano"></div>
                 <div class="barlines"></div>
                 <div class="playhead"></div>
               </div>
@@ -131,7 +132,7 @@
               <div class="vlabels" id="keys-guitar"></div>
               <div class="hwrap" id="hscroll-guitar">
                 <div class="rows notegrid" id="rows-guitar"></div>
-                <div class="steps-labels" id="labels-guitar" aria-hidden="true"></div>
+                <div class="steps-labels" id="labels-guitar"></div>
                 <div class="barlines"></div>
                 <div class="playhead"></div>
               </div>
@@ -157,7 +158,7 @@
               <div class="vlabels" id="keys-bass"></div>
               <div class="hwrap" id="hscroll-bass">
                 <div class="rows notegrid" id="rows-bass"></div>
-                <div class="steps-labels" id="labels-bass" aria-hidden="true"></div>
+                <div class="steps-labels" id="labels-bass"></div>
                 <div class="barlines"></div>
                 <div class="playhead"></div>
               </div>
@@ -170,7 +171,7 @@
   </main>
 
   <footer class="foot">
-    <div>ⓒ 2025 BeatLab SE — Fixed Playhead & Safe Ranges</div>
+    <div>ⓒ 2025 BeatLab SE — Final Version</div>
     <div class="hint">Space=Play/Pause · +/− Bars</div>
   </footer>
 
