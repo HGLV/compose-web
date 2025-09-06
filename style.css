@@ -8,6 +8,18 @@
   --cell:#0f1422; --cell-on1:#243b64; --cell-on2:#18233a; --border:#1d2230;
 
   --bar-strong:#a78bfa;  --bar-beat:#7aa2ff; --bar-sub:#40517a;
+
+  /* 스크롤바 변수 */
+  --sb-size: 12px;
+  --sb-track-1: rgba(17,22,35,.60);
+  --sb-track-2: rgba(10,12,22,.35);
+  --sb-thumb-1: #6b7ab0;
+  --sb-thumb-2: #3a4a7a;
+  --sb-thumb-hover-1: #8ea3ff;
+  --sb-thumb-hover-2: #5366a8;
+  --sb-thumb-active-1: #b9c6ff;
+  --sb-thumb-active-2: #7f93d5;
+  --sb-shadow: inset 0 2px 6px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.04);
 }
 
 *{box-sizing:border-box}
@@ -84,10 +96,8 @@ body{
   gap:.8rem;align-items:start;padding:var(--pad);
 }
 
-/* 기본값: notegrid는 flex로, 드럼/멜로디에서 아래의 구체 선택자가 덮어씀 */
 .rows.notegrid{display:flex;flex-direction:column;gap:var(--gap)}
 
-/* 라벨/행 박스 */
 .key{
   height:var(--rowH);display:flex;align-items:center;justify-content:flex-end;
   padding-right:.5rem;border:1px solid #20263a;border-radius:.4rem;
@@ -109,7 +119,6 @@ body{
   border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.35), inset 0 6px 14px rgba(50,110,255,.35);
 }
 
-/* 스텝 숫자 */
 .steps-labels{
   display:grid;grid-template-columns:repeat(var(--cols,16), var(--cellW));
   gap:var(--gap);margin-top:8px;
@@ -119,7 +128,7 @@ body{
   padding:.2rem 0;border-top:1px dashed #20283b;user-select:none
 }
 
-/* 플레이헤드: 칸의 가장 왼쪽에 정렬 */
+/* 플레이헤드 */
 .hwrap{position:relative;overflow-x:auto;overflow-y:hidden;}
 .hwrap .playhead{
   position:absolute;top:var(--pad);height:calc(100% - var(--pad) * 2 - 24px);
@@ -127,24 +136,31 @@ body{
   pointer-events:none;transform:translateX(0);z-index:5;
 }
 
-/* ===== 구분선 숨김(요청 반영) ===== */
-.barlines{ display:none !important; }
-
-/* ====== 라벨/시퀀서 행 동기화(멜로디) ======
-   라벨 컬럼과 시퀀서 그리드가 동일한 grid-rows를 공유하도록 설정 */
-.pgrid.melody .vlabels{
-  display:grid;                  /* flex → grid */
-  grid-template-rows: var(--rowsDef, auto); /* JS에서 행 정의 주입 */
-  row-gap: var(--gap);
+/* ===== 마디선 ===== */
+.hwrap .barlines{
+  position:absolute; top:var(--pad); bottom:calc(var(--pad) + 24px);
+  left:0; right:0; pointer-events:none; z-index:2;
 }
-.pgrid.melody .rows.notegrid{
-  display:grid;                  /* flex → grid */
+.hwrap .barline{
+  position:absolute; top:0; bottom:0; width:1px; background:#40517a; opacity:.95;
+}
+.hwrap .barline.beat{ background:#7aa2ff; width:2px; }
+.hwrap .barline.strong{ background:#a78bfa; width:3px; box-shadow:0 0 10px rgba(167,139,250,.25); }
+
+/* 라벨/시퀀서 행 동기화 (멜로디) */
+.pgrid.melody .vlabels{
+  display:grid;
   grid-template-rows: var(--rowsDef, auto);
   row-gap: var(--gap);
 }
-.pgrid.melody .note-row{ height:auto; }     /* 행 높이는 grid가 관리 */
+.pgrid.melody .rows.notegrid{
+  display:grid;
+  grid-template-rows: var(--rowsDef, auto);
+  row-gap: var(--gap);
+}
+.pgrid.melody .note-row{ height:auto; }
 
-/* ====== 라벨/시퀀서 행 동기화(드럼) ====== */
+/* 드럼도 동일 적용 */
 #box-drums .vlabels{
   display:grid;
   grid-template-rows: var(--rowsDef, auto);
@@ -155,15 +171,69 @@ body{
   grid-template-rows: var(--rowsDef, auto);
   row-gap: var(--gap);
 }
-#box-drums .note-row{ height:auto; }        /* 행 높이는 grid가 관리 */
+#box-drums .note-row{ height:auto; }
 
-/* 드럼 행은 살짝 높게 (원하면 유지/삭제 가능) */
-#box-drums .rows .note-row{ /* height는 위에서 grid가 관리하므로 필요시 주석처리 가능 */ }
-#box-drums .cell{ height:var(--rowH); }
+/* === Sleek Scrollbars === */
+.scroller-v, .hwrap { scrollbar-gutter: stable both-edges; }
+.scroller-v, .hwrap{
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb-1) transparent;
+}
+.scroller-v::-webkit-scrollbar,
+.hwrap::-webkit-scrollbar{
+  width: var(--sb-size);
+  height: var(--sb-size);
+}
+.scroller-v::-webkit-scrollbar-track,
+.hwrap::-webkit-scrollbar-track{
+  background: linear-gradient(180deg, var(--sb-track-1), var(--sb-track-2));
+  border-radius: 999px;
+  margin: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.scroller-v::-webkit-scrollbar-thumb,
+.hwrap::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, var(--sb-thumb-1), var(--sb-thumb-2));
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+  box-shadow: var(--sb-shadow);
+  transition: background .15s ease, border-width .15s ease, box-shadow .15s ease;
+}
+.scroller-v::-webkit-scrollbar-thumb:hover,
+.hwrap::-webkit-scrollbar-thumb:hover{
+  background: linear-gradient(180deg, var(--sb-thumb-hover-1), var(--sb-thumb-hover-2));
+  box-shadow: inset 0 3px 8px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);
+}
+.scroller-v::-webkit-scrollbar-thumb:active,
+.hwrap::-webkit-scrollbar-thumb:active{
+  background: linear-gradient(180deg, var(--sb-thumb-active-1), var(--sb-thumb-active-2));
+  border-width: 2px;
+  box-shadow: inset 0 4px 10px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.08);
+}
+.scroller-v::-webkit-scrollbar-button,
+.hwrap::-webkit-scrollbar-button{ display:none }
+.scroller-v::-webkit-scrollbar-corner,
+.hwrap::-webkit-scrollbar-corner{ background: transparent }
 
-/* 푸터 */
 .foot{
   max-width:1200px;margin:1rem auto;padding:.5rem 1rem;color:var(--ink-2);
   display:flex;justify-content:space-between;align-items:center;gap:1rem
 }
 .hint{opacity:.8}
+
+/* ==== REMOVE BAR LINES ==== */
+.hwrap .barlines{ display:none !important; }
+.hwrap .barline,
+.hwrap .barline.beat,
+.hwrap .barline.strong{ display:none !important; }
+
+/* === Draggable Playhead === */
+.hwrap .playhead{
+  cursor: ew-resize;
+}
+.hwrap .playhead::after{
+  content:"";
+  position:absolute; left:-6px; right:-6px; top:-8px; bottom:-8px;
+  /* 보이지 않는 넓은 히트영역으로 드래그 쉽게 */
+}
